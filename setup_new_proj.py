@@ -39,25 +39,26 @@ physicell_fullpath= sys.argv[2]
 print('physicell_fullpath = ',physicell_fullpath)
 
 print("\n STEP 1: copy tool4nanobio to new project:\n")
-try:
-  for elm in os.listdir('.'):
-    if (elm[0] != '.'):  # avoid /.git, etc
-        if os.path.isdir(elm):
-            from_dir = elm
-            to_dir = os.path.join(proj_fullpath, elm)
-            print(from_dir, " --> ", to_dir)
-            # shutil.copytree(elm, os.path.join(proj_fullpath, elm))        # (from_dir, to_dir)
-            shutil.copytree(from_dir, to_dir)
-        else:
-            if (elm == sys.argv[0] or elm == "README.md"):
-                # print('------- skipping over ',elm)
-                continue
-            from_file = elm
-            to_file = os.path.join(proj_fullpath, elm)        # (from_file, to_file)
-            print(from_file, " --> ", to_file)
-            shutil.copy(from_file, to_file)
-except:
-    print("error copying stuff to ", proj_fullpath, " ... maybe you already did?")
+for elm in os.listdir('.'):
+    try:
+        if (elm[0] != '.'):  # avoid /.git, etc
+            if os.path.isdir(elm):
+                from_dir = elm
+                to_dir = os.path.join(proj_fullpath, elm)
+                print(from_dir, " --> ", to_dir)
+                # shutil.copytree(elm, os.path.join(proj_fullpath, elm))        # (from_dir, to_dir)
+                shutil.copytree(from_dir, to_dir)
+            else:
+                if (elm == sys.argv[0] or elm == "README.md"):
+                    # print('------- skipping over ',elm)
+                    continue
+                from_file = elm
+                to_file = os.path.join(proj_fullpath, elm)        # (from_file, to_file)
+                print(from_file, " --> ", to_file)
+                shutil.copy(from_file, to_file)
+    except:
+#        print("   can't copy ",elm," to ", proj_fullpath, " ... maybe you already did?")
+        print("   can't copy ... maybe you already did?")
 
 #------------------------------------
 print("\n\n STEP 2: copy PhysiCell project's source (and data files) to new project's /src:\n")
@@ -74,7 +75,7 @@ for dname in dir_names:
     try:
         shutil.copytree(from_dir, to_dir)
     except:
-        print("can't copy (maybe already there?)")
+        print("   can't copy ... maybe you already did?")
 
 from_file = os.path.join(physicell_fullpath, "Makefile")
 to_file = os.path.join(proj_src_dir, "Makefile")
@@ -95,6 +96,12 @@ from_file = os.path.join(physicell_fullpath, "config", "PhysiCell_settings.xml")
 to_file = os.path.join(proj_fullpath, "data", "PhysiCell_settings.xml")
 print(from_file, " --> ", to_file)
 shutil.copy(from_file, to_file)
+
+print("   Editing ", to_file, ": <folder>output</folder> --> <folder>.</folder>")
+with open(to_file, 'r') as myfile:
+    new_text = myfile.read().replace('output', ".")
+with open(to_file, 'w') as myfile:
+    myfile.write(new_text)
 
 from_file = os.path.join(physicell_fullpath, "output", "initial.xml")
 to_file = os.path.join(proj_fullpath, "data", "initial.xml")
