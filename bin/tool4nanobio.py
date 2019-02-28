@@ -146,7 +146,7 @@ def get_config_files():
             cachedir = os.environ['CACHEDIR']
             full_path = os.path.join(cachedir, "tool4nanobio")
         except:
-            print("Exception in get_config_files")
+            print("Exception in get_config_files: env var CACHEDIR not set.")
             return cf
 
     # Put all those cached (full) dirs into a list
@@ -263,12 +263,13 @@ def outcb(s):
         sub.update('')
     return s
 
-# Callback for the (dumb) 'Run' button (without hublib.ui)
+# Callback for the "dumb" Run button (without hublib.ui)
 def run_button_cb(s):
 #    with debug_view:
 #        print('run_button_cb')
 
-    os.chdir(homedir)  # /tmpdir
+    # os.chdir(homedir)  # /tmpdir
+    os.chdir( os.path.join(homedir, output_dir) )
 
 #    new_config_file = "config.xml"
     new_config_file = full_xml_filename
@@ -298,7 +299,7 @@ else:
                             cachename='tool4nanobio',
                             showcache=False,
                             outcb=outcb)  
-    else:
+    else:  # "dumb" Run button
         run_button = widgets.Button(
             description='Run',
             button_style='success',  # 'success', 'info', 'warning', 'danger' or ''
