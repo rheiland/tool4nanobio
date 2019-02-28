@@ -4,7 +4,8 @@ This repository helps auto-generate a Jupyter notebook GUI for PhysiCell-related
 
 ## Dependencies
 * We highly recommend installing the [Anaconda Python 3.x](https://www.anaconda.com/distribution) distribution. This will contain Python and various 3rd party modules needed to create the PhysiCell Jupyter notebook (PhysiCell GUI). It will also contain the Jupyter notebook server to test the GUI.
-* If you are not on Windows, it's possible to install a Python module (hublib) that will provide customized widgets for the GUI. (The make_my_tool.py script will attempt to install this)
+* You need to be able to run Anaconda's 'python' from the command line. You can 1) provide the full path command, 2) edit your PATH system variable, or 3) create an alias.
+* If you are not on Windows, it may be possible to install a Python module (hublib) that will provide customized widgets for the GUI. (The make_my_tool.py script will attempt to install this on OSX or Linux, not Windows)
 
 ## Steps to follow
 
