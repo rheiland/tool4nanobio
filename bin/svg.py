@@ -10,6 +10,8 @@ import numpy as np
 import zipfile
 import glob
 from debug import debug_view
+
+hublib_flag = False
 try:
     from hublib.ui import Download
     hublib_flag = True
@@ -147,7 +149,7 @@ class SVGTab(object):
         # with debug_view:
         #     print("plot_svg:", full_fname) 
         if not os.path.isfile(full_fname):
-            print("Missing output file")   
+            print("svg.py: Missing output file")   
             return
 
         xlist = deque()

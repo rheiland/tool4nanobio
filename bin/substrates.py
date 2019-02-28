@@ -11,6 +11,8 @@ import xml.etree.ElementTree as ET  # https://docs.python.org/2/library/xml.etre
 import glob
 import zipfile
 from debug import debug_view 
+
+hublib_flag = False
 try:
     from hublib.ui import Download
     hublib_flag = True
@@ -321,8 +323,7 @@ class SubstrateTab(object):
         if not os.path.isfile(full_fname):
 #            print("File does not exist: ", full_fname)
 #            print("No: ", full_fname)
-            print("Missing output file")  # No:  output00000000_microenvironment0.mat
-
+            print("substrates.py: Missing output file")  # No:  output00000000_microenvironment0.mat
             return
 
 #        tree = ET.parse(xml_fname)
