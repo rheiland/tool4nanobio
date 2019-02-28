@@ -207,7 +207,7 @@ def run_done_func(s, rdir):
     #     print('RDF DONE')
 
 
-# This is used now for the RunCommand
+# This is used now for the (smart) RunCommand
 def run_sim_func(s):
     # with debug_view:
     #     print('run_sim_func')
@@ -266,14 +266,16 @@ def run_button_cb(s):
 #    with debug_view:
 #        print('run_button_cb')
 
+    os.chdir(homedir)  # /tmpdir
+
 #    new_config_file = "config.xml"
     new_config_file = full_xml_filename
     write_config_file(new_config_file)
 #    subprocess.call(["biorobots", xml_file_out])
 #    subprocess.call(["myproj", new_config_file])   # spews to shell, but not ctl-C'able
 #    subprocess.call(["myproj", new_config_file], shell=True)  # no
-    print("cwd = ", os.getcwd() )
-    print("exec_file = ",exec_file)
+#    print("cwd = ", os.getcwd() )
+#    print("exec_file = ",exec_file)
     if os.path.isfile(exec_file):
         subprocess.Popen([exec_file, new_config_file])
     else:
