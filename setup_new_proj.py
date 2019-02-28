@@ -22,16 +22,20 @@ import platform
 
 num_args = len(sys.argv)
 print('num_args=',num_args)
-if (num_args < 4):
-    print("Usage: %s <full-path-to-new-project>  <simple-project-name>  <full-path-to-PhysiCell-project>")
+if (num_args < 3):
+#    print("Usage: %s <full-path-to-new-project>  <simple-project-name>  <full-path-to-PhysiCell-project>")
+    print("Usage: %s <full-path-to-new-project>  <full-path-to-PhysiCell-project>")
 #    print("Usage: %s <your repo name>")
     sys.exit(1)
 #print('sys.argv[0] = ',sys.argv[0])
 proj_fullpath = sys.argv[1]
 print('proj_fullpath = ',proj_fullpath)
-proj_name = sys.argv[2]
+
+#proj_name = sys.argv[2]
+proj_name = os.path.basename(proj_fullpath)
 print('proj_name = ',proj_name)
-physicell_fullpath= sys.argv[3]
+
+physicell_fullpath= sys.argv[2]
 print('physicell_fullpath = ',physicell_fullpath)
 
 print("\n STEP 1: copy tool4nanobio to new project:\n")
