@@ -38,7 +38,7 @@ C:\Users\heiland\git\tool4nanobio>python setup_new_proj.py  C:\Users\heiland\git
 ```
 ~/git/ise_proj1$ jupyter notebook ise_proj1.ipynb
 ```
-6. If it's successful, commit everything to the GitHub repo.
+6. If it's successful, commit everything to the GitHub repo for your new project.
 7. Before you can actually run a simulation and visualize results from the (local) notebook, you'll need to build your PhysiCell project (in /src) and copy the ```myproj``` executable to /bin. See details below.
 8. Perform steps to create your nanoHUB tool.
 
