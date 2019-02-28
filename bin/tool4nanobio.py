@@ -26,7 +26,7 @@ if platform.system() != 'Windows':
         hublib_flag = False
 else:
     exec_file = os.path.join(os.getcwd(), "bin", "myproj.exe")
-print("exec_file = ",exec_file)
+# print("exec_file = ",exec_file)
 
 
 # join_our_list = "(Join/ask questions at https://groups.google.com/forum/#!forum/physicell-users)\n"
