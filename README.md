@@ -6,7 +6,7 @@ This repository helps auto-generate a Jupyter notebook GUI for PhysiCell-related
 * We highly recommend installing the [Anaconda Python 3.x](https://www.anaconda.com/distribution) distribution. This will contain Python and various 3rd party modules needed to create the PhysiCell Jupyter notebook (PhysiCell GUI). It will also contain the Jupyter notebook server to test the GUI.
 * You need to be able to run Anaconda's 'python' from the command line. You can 1) edit your PATH system variable, 2) provide the full path command, or 3) create an alias.
 * If you are not on Windows, it may be possible to install a Python module (hublib) that will provide customized widgets for the GUI. (The make_my_tool.py script will attempt to install this on OSX or Linux, not Windows)
-* You have PhysiCell installed, have an example model compiled, and have successfully run it. The script below assumes you have "config/PhysiCell_settings.xml" and "output/initial.xml" files in your PhysiCell directory. (If you do not, certain aspects of this automated process will fail and you'll need to manually create and/or copy files)
+* You have PhysiCell installed, have an example model compiled, and have successfully run it. The script below assumes you have: ```Makefile, main.cpp, config/PhysiCell_settings.xml, and output/initial.xml``` files in your PhysiCell directory. (If you do not, certain aspects of this automated process will fail and you'll need to manually create and/or copy files)
 * the directory where you cloned your "project repo" (next section) is essentially empty (it might contain a README.md)
 
 ## Steps to follow
@@ -34,7 +34,11 @@ C:\Users\heiland\git\tool4nanobio>python setup_new_proj.py  C:\Users\heiland\git
 ```
 ~/git/ise_proj1$ python make_my_tool.py ise_proj1
 ```
-5. Build your PhysiCell project in your /src directory and copy the resulting ```myproj``` executable to /bin. See details below.
+5. Edit the Makefile in the /src directory so the compiled program will be called ```myproj```:
+```
+PROGRAM_NAME := myproj
+```
+6. Build your PhysiCell project in your /src directory and copy the resulting ```myproj``` executable to /bin. See details below.
 ```
 (bash commands)
 ~/git/ise_proj1$ cd src
@@ -44,12 +48,12 @@ C:\Users\heiland\git\tool4nanobio>python setup_new_proj.py  C:\Users\heiland\git
 ~/git/ise_proj1$ cd ..
 ```
 
-6. Try to display the new Jupyter notebook:
+7. Try to display the new Jupyter notebook:
 ```
 ~/git/ise_proj1$ jupyter notebook ise_proj1.ipynb
 ```
-7. If it's successful, commit everything to the GitHub repo for your new project.
-8. Perform steps to create your nanoHUB tool (optional) - see section below.
+8. If it's successful, commit everything to the GitHub repo for your new project.
+9. Perform steps to create your nanoHUB tool (optional) - see section below.
 
 ## Details of the above scripts (if you care)
 
