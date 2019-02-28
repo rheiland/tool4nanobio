@@ -12,18 +12,20 @@ import glob
 import zipfile
 from debug import debug_view 
 
-hublib_flag = False
-try:
-    from hublib.ui import Download
-    hublib_flag = True
-except:
-    hublib_flag = False
+# hublib_flag = False
+# try:
+#     from hublib.ui import Download
+#     hublib_flag = True
+# except:
+#     hublib_flag = False
 
 
 class SubstrateTab(object):
 
-    def __init__(self):
+    def __init__(self, nanoHUB):
         
+        self.nanoHUB = nanoHUB
+
         self.output_dir = '.'
 #        self.output_dir = 'tmpdir'
 
@@ -179,7 +181,7 @@ class SubstrateTab(object):
                             align_items='stretch',
                             flex_direction='row',
                             display='flex'))
-        if hublib_flag:
+        if self.nanoHUB:
             self.download_button = Download('mcds.zip', style='warning', icon='cloud-download', 
                                             tooltip='Download data', cb=self.download_cb)
             download_row = HBox([self.download_button.w, Label("Download all substrate data (browser must allow pop-ups).")])
@@ -192,10 +194,11 @@ class SubstrateTab(object):
     #---------------------------------------------------
     def update_dropdown_fields(self, data_dir):
         # print('update_dropdown_fields called --------')
-        self.output_dir = data_dir
+        # self.output_dir = data_dir
         tree = None
         try:
-            fname = os.path.join(self.output_dir, "initial.xml")
+            # fname = os.path.join(self.output_dir, "initial.xml")
+            fname = os.path.join(data_dir, "initial.xml")
             tree = ET.parse(fname)
             xml_root = tree.getroot()
         except:
@@ -317,13 +320,15 @@ class SubstrateTab(object):
 #        fullname = fname
         full_fname = os.path.join(self.output_dir, fname)
         full_xml_fname = os.path.join(self.output_dir, xml_fname)
+        # full_fname = os.path.join(os.getcwd(), fname)
+        # full_xml_fname = os.path.join(os.getcwd(), xml_fname)
 #        self.output_dir = '.'
 
 #        if not os.path.isfile(fullname):
         if not os.path.isfile(full_fname):
 #            print("File does not exist: ", full_fname)
 #            print("No: ", full_fname)
-            print("substrates.py: Missing output file")  # No:  output00000000_microenvironment0.mat
+            print("substrates.py: Missing output file", full_fname)  # No:  output00000000_microenvironment0.mat
             return
 
 #        tree = ET.parse(xml_fname)

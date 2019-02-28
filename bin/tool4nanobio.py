@@ -42,15 +42,15 @@ config_tab = ConfigTab()
 xml_file = os.path.join('data', 'PhysiCell_settings.xml')
 full_xml_filename = os.path.abspath(xml_file)
 
-tree = ET.parse(full_xml_filename)  # this file cannot be overwritten; part of tool distro
-xml_root = tree.getroot()
-user_tab = UserTab()
-svg = SVGTab()
-sub = SubstrateTab()
-
 nanoHUB_flag = False
 if( 'HOME' in os.environ.keys() ):
     nanoHUB_flag = "home/nanohub" in os.environ['HOME']
+
+tree = ET.parse(full_xml_filename)  # this file cannot be overwritten; part of tool distro
+xml_root = tree.getroot()
+user_tab = UserTab()
+svg = SVGTab(nanoHUB_flag)
+sub = SubstrateTab(nanoHUB_flag)
 
 
 def read_config_cb(_b):
@@ -357,7 +357,11 @@ fill_gui_params(read_config.options['DEFAULT'])
 #svg.update(read_config.value)
 #output_dir = "output"
 output_dir = "tmpdir"
+output_dir = os.getcwd()
+output_dir = os.path.join(os.getcwd(), "tmpdir")
 svg.update(output_dir)
 #sub.update_dropdown_fields(output_dir)
-sub.update_dropdown_fields("data")
+# sub.update_dropdown_fields("data")
+data_dir = os.path.join(os.getcwd(), "data")
+sub.update_dropdown_fields(data_dir)
 sub.update(output_dir)
