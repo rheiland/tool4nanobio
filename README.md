@@ -2,11 +2,12 @@
 This repository helps auto-generate a Jupyter notebook GUI for PhysiCell-related models and output. The directory structure and content of the repository matches a template required for a [nanoHUB](https://nanohub.org/) tool installation. However, creating an actual nanoHUB tool is optional; the GUI created here should also work (with fewer bells & whistles, perhaps) on your personal computer, assuming you have the required Python modules and are able to run a Jupyter notebook server.
 
 
-## Dependencies
+## Dependencies/Requirements
 * We highly recommend installing the [Anaconda Python 3.x](https://www.anaconda.com/distribution) distribution. This will contain Python and various 3rd party modules needed to create the PhysiCell Jupyter notebook (PhysiCell GUI). It will also contain the Jupyter notebook server to test the GUI.
 * You need to be able to run Anaconda's 'python' from the command line. You can 1) edit your PATH system variable, 2) provide the full path command, or 3) create an alias.
 * If you are not on Windows, it may be possible to install a Python module (hublib) that will provide customized widgets for the GUI. (The make_my_tool.py script will attempt to install this on OSX or Linux, not Windows)
 * You have PhysiCell installed, have an example model compiled, and have successfully run it. The script below assumes you have "config/PhysiCell_settings.xml" and "output/initial.xml" files in your PhysiCell directory. (If you do not, certain aspects of this automated process will fail and you'll need to manually create and/or copy files)
+* the directory where you cloned your "project repo" (next section) is essentially empty (it might contain a README.md)
 
 ## Steps to follow
 
@@ -16,10 +17,18 @@ This repository helps auto-generate a Jupyter notebook GUI for PhysiCell-related
 ```
 <full-path-to-new-project>  <full-path-to-PhysiCell-project>
 ```
-Examples might be (from a Unix-like shell):
+Variations of running the script might be - from a Unix-like shell:
 ```
-~/git/tool4nanobio$ python setup_new_proj.py /Users/heiland/git/ise_proj1  /Users/heiland/dev/PhysiCell_heterogeneity
-~/git/tool4nanobio$ python setup_new_proj.py ~/git/ise_proj2 ~/dev/PhysiCell_heterogeneity
+~/git/tool4nanobio$ python setup_new_proj.py  /Users/heiland/git/ise_proj1  /Users/heiland/dev/PhysiCell_heterogeneity
+~/git/tool4nanobio$ python setup_new_proj.py  ~/git/ise_proj1  ~/dev/PhysiCell_heterogeneity
+
+[Windows Git Bash] MINGW64 ~/git/tool4nanobio (master)
+$ python setup_new_proj.py  /c/Users/heiland/git/ise_proj1  /c/Users/heiland/dev/PhysiCell_heterogeneity
+$ python setup_new_proj.py  ~/git/ise_proj1  ~/dev/PhysiCell_heterogeneity
+```
+from a Windows Command Prompt shell:
+```
+C:\Users\heiland\git\tool4nanobio>python setup_new_proj.py  C:\Users\heiland\git\ise_proj1  C:\Users\heiland\dev\PhysiCell_heterogeneity
 ```
 4. From your root directory of your new project repo, run ```make_my_tool.py```, for example:
 ```
