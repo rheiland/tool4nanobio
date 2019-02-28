@@ -6,6 +6,7 @@ import shutil
 import math
 import datetime
 import tempfile
+import subprocess
 from config import ConfigTab
 from user_params import UserTab
 from svg import SVGTab
@@ -14,11 +15,14 @@ from pathlib import Path
 from debug import debug_view
 import platform
 
-hublib_flag = True
+hublib_flag = False
+exec_file = os.path.join(os.getcwd(), "bin", "myproj")
+print("exec_file = ",exec_file)
 if platform.system() != 'Windows':
     try:
 #        print("Trying to import hublib.ui")
         from hublib.ui import RunCommand, Submit
+        hublib_flag = True
     except:
         hublib_flag = False
 
@@ -268,7 +272,12 @@ def run_button_cb(s):
 #    subprocess.call(["biorobots", xml_file_out])
 #    subprocess.call(["myproj", new_config_file])   # spews to shell, but not ctl-C'able
 #    subprocess.call(["myproj", new_config_file], shell=True)  # no
-    subprocess.Popen(["myproj", new_config_file])
+    print("cwd = ", os.getcwd() )
+    print("exec_file = ",exec_file)
+    if os.path.isfile(exec_file):
+        subprocess.Popen([exec_file, new_config_file])
+    else:
+        print("'myproj' executable missing from /bin directory")
 
 if nanoHUB_flag:
     run_button = Submit(label='Run',
@@ -331,7 +340,11 @@ if nanoHUB_flag:
 else:
     #gui = widgets.VBox(children=[read_config, tabs, write_config_row, run_button.w])
     #gui = widgets.VBox(children=[read_config, tabs, run_button.w])
-    gui = widgets.VBox(children=[tabs, run_button.w])
+    if (hublib_flag):
+        gui = widgets.VBox(children=[tabs, run_button.w])
+    else:
+        gui = widgets.VBox(children=[tabs, run_button])
+
 fill_gui_params(read_config.options['DEFAULT'])
 
 # pass in (relative) directory where output data is located
