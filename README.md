@@ -4,20 +4,22 @@ This repository helps auto-generate a Jupyter notebook GUI for PhysiCell-related
 
 ## Dependencies
 * We highly recommend installing the [Anaconda Python 3.x](https://www.anaconda.com/distribution) distribution. This will contain Python and various 3rd party modules needed to create the PhysiCell Jupyter notebook (PhysiCell GUI). It will also contain the Jupyter notebook server to test the GUI.
-* You need to be able to run Anaconda's 'python' from the command line. You can 1) provide the full path command, 2) edit your PATH system variable, or 3) create an alias.
+* You need to be able to run Anaconda's 'python' from the command line. You can 1) edit your PATH system variable, 2) provide the full path command, or 3) create an alias.
 * If you are not on Windows, it may be possible to install a Python module (hublib) that will provide customized widgets for the GUI. (The make_my_tool.py script will attempt to install this on OSX or Linux, not Windows)
+* You have PhysiCell installed, have an example model compiled, and have successfully run it. The script below assumes you have "config/PhysiCell_settings.xml" and "output/initial.xml" files in your PhysiCell directory. (If you do not, certain aspects of this automated process will fail and you'll need to manually create and/or copy files)
 
 ## Steps to follow
 
 1. Create a new, public repository on github.com (not the IU github) and clone it to your computer. This will be your "project repo". Call it whatever you want (it doesn't have to match the name of your eventual nanoHUB tool). If you create a README.md, make a backup copy in case it gets overwritten in the steps below. For the example steps below, we choose the name "ise_proj1".
 2. Clone this tool4nanobio repo to your computer.
-3. In a command line shell window (terminal or command prompt), from the tool4nanobio directory, run the Python script called ```setup_new_proj.py```. If successful, this will copy (nearly) all necessary files into your new project repo (step 1). You provide 3 arguments to the script:
+3. In a command line shell window (terminal or command prompt), from the tool4nanobio directory, run the Python script called ```setup_new_proj.py```. If successful, this will copy (nearly) all necessary files into your new project repo (step 1). You provide two arguments to the script:
 ```
-<full-path-to-new-project>  <simple-project-name>  <full-path-to-PhysiCell-project>
+<full-path-to-new-project>  <full-path-to-PhysiCell-project>
 ```
-So, an example might be (from a Unix-like shell):
+Examples might be (from a Unix-like shell):
 ```
-~/git/tool4nanobio$ python setup_new_proj.py /Users/heiland/git/ise_proj1 ise_proj1 /Users/heiland/dev/PhysiCell_heterogeneity
+~/git/tool4nanobio$ python setup_new_proj.py /Users/heiland/git/ise_proj1  /Users/heiland/dev/PhysiCell_heterogeneity
+~/git/tool4nanobio$ python setup_new_proj.py ~/git/ise_proj2 ~/dev/PhysiCell_heterogeneity
 ```
 4. From your root directory of your new project repo, run ```make_my_tool.py```, for example:
 ```
