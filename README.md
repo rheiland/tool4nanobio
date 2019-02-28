@@ -34,7 +34,11 @@ C:\Users\heiland\git\tool4nanobio>python setup_new_proj.py  C:\Users\heiland\git
 ```
 ~/git/ise_proj1$ python make_my_tool.py ise_proj1
 ```
-5. Build your PhysiCell project in your /src directory and copy the resulting ```myproj``` executable to /bin. See details below.
+5. Edit the Makefile in the /src directory so the compiled program will be called ```myproj```:
+```
+PROGRAM_NAME := myproj
+```
+6. Build your PhysiCell project in your /src directory and copy the resulting ```myproj``` executable to /bin. See details below.
 ```
 (bash commands)
 ~/git/ise_proj1$ cd src
@@ -44,12 +48,12 @@ C:\Users\heiland\git\tool4nanobio>python setup_new_proj.py  C:\Users\heiland\git
 ~/git/ise_proj1$ cd ..
 ```
 
-6. Try to display the new Jupyter notebook:
+7. Try to display the new Jupyter notebook:
 ```
 ~/git/ise_proj1$ jupyter notebook ise_proj1.ipynb
 ```
-7. If it's successful, commit everything to the GitHub repo for your new project.
-8. Perform steps to create your nanoHUB tool (optional) - see section below.
+8. If it's successful, commit everything to the GitHub repo for your new project.
+9. Perform steps to create your nanoHUB tool (optional) - see section below.
 
 ## Details of the above scripts (if you care)
 
