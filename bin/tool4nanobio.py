@@ -17,7 +17,6 @@ import platform
 
 hublib_flag = False
 exec_file = os.path.join(os.getcwd(), "bin", "myproj")
-print("exec_file = ",exec_file)
 if platform.system() != 'Windows':
     try:
 #        print("Trying to import hublib.ui")
@@ -27,6 +26,7 @@ if platform.system() != 'Windows':
         hublib_flag = False
 else:
     exec_file = os.path.join(os.getcwd(), "bin", "myproj.exe")
+print("exec_file = ",exec_file)
 
 
 # join_our_list = "(Join/ask questions at https://groups.google.com/forum/#!forum/physicell-users)\n"
@@ -109,8 +109,8 @@ def write_config_file(name):
 
 # callback from write_config_button
 def write_config_file_cb(b):
-#    dirname = os.path.expanduser('~/.local/share/tool4ise')  # does Windows like this?
-    path_to_share = os.path.join('~', '.local','share','tool4ise')
+#    dirname = os.path.expanduser('~/.local/share/tool4nanobio')  # does Windows like this?
+    path_to_share = os.path.join('~', '.local','share','tool4nanobio')
     dirname = os.path.expanduser(path_to_share)
 
     val = write_config_box.value
@@ -126,8 +126,8 @@ def get_config_files():
 #    cf = {'DEFAULT': os.path.abspath('data/PhysiCell_settings.xml')}  # does Windows like this?
 #    cf = {'DEFAULT': os.path.abspath(xml_file)}
     cf = {'DEFAULT': full_xml_filename}
-#    dirname = os.path.expanduser('~/.local/share/tool4ise')  # does Windows like this?
-    path_to_share = os.path.join('~', '.local','share','tool4ise')
+#    dirname = os.path.expanduser('~/.local/share/tool4nanobio')  # does Windows like this?
+    path_to_share = os.path.join('~', '.local','share','tool4nanobio')
     dirname = os.path.expanduser(path_to_share)
     try:
         os.makedirs(dirname)
@@ -139,12 +139,12 @@ def get_config_files():
 
     # Find the dir path (full_path) to the cached dirs
     if nanoHUB_flag:
-        full_path = os.path.expanduser("~/data/results/.submit_cache/tool4ise")  # does Windows like this?
+        full_path = os.path.expanduser("~/data/results/.submit_cache/tool4nanobio")  # does Windows like this?
     else:
         # local cache
         try:
             cachedir = os.environ['CACHEDIR']
-            full_path = os.path.join(cachedir, "tool4ise")
+            full_path = os.path.join(cachedir, "tool4nanobio")
         except:
             print("Exception in get_config_files")
             return cf
@@ -187,7 +187,7 @@ def run_done_func(s, rdir):
     
     if nanoHUB_flag:
         # Email the user that their job has completed
-        os.system("submit  mail2self -s 'nanoHUB tool4ise' -t 'Your Run completed.'&")
+        os.system("submit  mail2self -s 'nanoHUB tool4nanobio' -t 'Your Run completed.'&")
 
     # save the config file to the cache directory
     shutil.copy('config.xml', rdir)
@@ -240,7 +240,7 @@ def run_sim_func(s):
 
     if nanoHUB_flag:
         if remote_cb.value:
-            s.run(run_name, "-v ncn-hub_M@brown -n 8 -w 1440 tool4ise-r7 config.xml")   # "-r7" suffix??
+            s.run(run_name, "-v ncn-hub_M@brown -n 8 -w 1440 tool4nanobio-r7 config.xml")   # "-r7" suffix??
         else:
             # read_config.index = 0   # reset Dropdown 'Load Config' to 'DEFAULT' when Run interactively
             s.run(run_name, "--local ../bin/myproj config.xml")
@@ -283,18 +283,19 @@ def run_button_cb(s):
     else:
         print("'myproj' executable missing from /bin directory")
 
+
 if nanoHUB_flag:
     run_button = Submit(label='Run',
                        start_func=run_sim_func,
                         done_func=run_done_func,
-                        cachename='tool4ise',
+                        cachename='tool4nanobio',
                         showcache=False,
                         outcb=outcb)
 else:
     if (hublib_flag):
         run_button = RunCommand(start_func=run_sim_func,
                             done_func=run_done_func,
-                            cachename='tool4ise',
+                            cachename='tool4nanobio',
                             showcache=False,
                             outcb=outcb)  
     else:
