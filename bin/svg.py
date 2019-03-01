@@ -11,12 +11,12 @@ import zipfile
 import glob
 from debug import debug_view
 
-# hublib_flag = False
-# try:
-#     from hublib.ui import Download
-#     hublib_flag = True
-# except:
-#     hublib_flag = False
+hublib_flag = False
+try:
+    from hublib.ui import Download
+    hublib_flag = True
+except:
+    hublib_flag = False
 
 
 class SVGTab(object):
