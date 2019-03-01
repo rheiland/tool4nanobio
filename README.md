@@ -55,6 +55,47 @@ PROGRAM_NAME := myproj
 8. If it's successful, commit everything to the GitHub repo for your new project.
 9. Perform steps to create your nanoHUB tool (optional) - see section below.
 
+## Testing your notebook locally
+
+From the root directory of your new project (your cloned repo), run:
+```
+~/git/ise_proj1$ jupyter notebook <your-repo>.ipynb
+```
+Select ‘Cell’ → ‘Run All’ menu item to display the notebook (or, if necessary, select the 'Kernel' → ‘Restart & Run All’ menu item).
+Click the ‘Run’ button in the GUI to see if it works. Output files should appear in the ```tmpdir``` sub-directory.
+
+<!--
+If everything appears to be correct and you want to test and possibly publish your tool on nanoHUB:
+
+* Delete tool4nanobio.zip in your repo. Optionally, clean up (delete) /src/*.o
+* Commit files to your GitHub repo.
+-->
+
+
+## Create a nanoHUB tool (optional)
+
+* If you do not have a nanoHUB account, register for one at https://nanohub.org/register/
+* On https://nanohub.org/tools/create, fill out the basic information for creating your nanoHUB tool. Tool Name should be 3-15 alphanumeric characters, including at least one non numeric character (e.g., ```iu399sp19p099```). Although not required, it’s probably wise to also use only lowercase characters. Provide the URL to your newly created GitHub repo (e.g., ```https://github.com/...```) and also select the bullet to ```Publish as a Jupyter notebook```. When you finally click the ```Register Tool``` button, you will be told if that tool name has already been taken, however, it may take a few seconds for that to appear. Also, don't worry if you forget to provide some info on this initial form, you can always edit it later.
+
+* In another tab of your browser, go to your newly created repository and edit the ```middleware/invoke``` script *in-place*. You want the name of the .ipynb to be your newly created notebook (=repo) name and the name following the ```-t``` to be the name of your nanoHUB tool. For example:
+```
+/usr/bin/invoke_app "$@" -C "start_jupyter -A -T @tool ise_proj1.ipynb" -t iu399sp19p099 \
+```
+If you happened to create your repo to be the same name as your nanoHUB tool, then it would be:
+```
+/usr/bin/invoke_app "$@" -C "start_jupyter -A -T @tool iu399sp19p099.ipynb" -t iu399sp19p099 \
+```
+The reason we edit this file in-place is to retain its executable mode. It should be indicated as follows:
+![alt ensure executable](https://github.com/rheiland/tool4nanobio/blob/master/doc/invoke_file_exec_mode.png)
+
+
+* From the status page of your new tool on nanoHUB (e.g., https://nanohub.org/tools/iu399sp19p099/status), click the link to have it installed for testing (below the "We are waiting for You"). (You must be logged in to nanoHUB). Wait 1-3 days for that to happen. You will receive an email from nanoHUB when the tool is installed.
+
+The following is a screenshot of a nanoHUB tool's status page:
+![alt tool status page](https://github.com/rheiland/tool4nanobio/blob/master/doc/nanohub_tool_status_page-med.png)
+
+* After your tool in installed and you have tested it and feel like it’s ready to publish, click the link on your tool’s status page that you approve it (for publishing). You will (I think) then be asked to provide the license for your tool and check a box to verify the license is indeed correct. You will receive an automated email from nanoHUB saying the tool status changed from "Created to Uploaded". The nanoHUB sys admin will then need to compile your code and deploy it there. You will receive another email when the tool is ready to test on nanoHUB.
+
 ## Details of the above scripts (if you care)
 
 In more detail, the ```setup_new_proj.py``` script should:
@@ -106,45 +147,7 @@ This script will do a number of things:
 * attempt to install the “hublib” Python module that provides the fancy “Run” button widget (with Output and Cancel features).
 
 Copy the “initial.xml”, from the output you generated when you ran your project in its original location, into this repo's /data directory.
-
-## Testing your notebook locally
-
-From the root directory of your new project (your cloned repo), run:
-```
-~/git/ise_proj1$ jupyter notebook <your-repo>.ipynb
-```
-Select ‘Cell’ → ‘Run All’ menu item to display the notebook (or, if necessary, select the 'Kernel' → ‘Restart & Run All’ menu item).
-Click the ‘Run’ button in the GUI to see if it works. Output files should appear in the ```tmpdir``` sub-directory.
-
 <!--
-If everything appears to be correct and you want to test and possibly publish your tool on nanoHUB:
-
-* Delete tool4nanobio.zip in your repo. Optionally, clean up (delete) /src/*.o
-* Commit files to your GitHub repo.
--->
-
-
-## Create a nanoHUB tool (optional)
-
-* If you do not have a nanoHUB account, register for one at https://nanohub.org/register/
-* On https://nanohub.org/tools/create, fill out the basic information for creating your nanoHUB tool. Tool Name should be 3-15 alphanumeric characters, including at least one non numeric character (e.g., ```iu399sp19p099```). Although not required, it’s probably wise to also use only lowercase characters. Provide the URL to your newly created GitHub repo (e.g., ```https://github.com/...```) and also select the bullet to ```Publish as a Jupyter notebook```. When you finally click the ```Register Tool``` button, you will be told if that tool name has already been taken, however, it may take a few seconds for that to appear. Also, don't worry if you forget to provide some info on this initial form, you can always edit it later.
-
-* In another tab of your browser, go to your newly created repository and edit the ```middleware/invoke``` script *in-place*. You want the name of the .ipynb to be your newly created notebook (=repo) name and the name following the ```-t``` to be the name of your nanoHUB tool. For example:
-```
-/usr/bin/invoke_app "$@" -C "start_jupyter -A -T @tool ise_proj1.ipynb" -t iu399sp19p099 \
-```
-If you happened to create your repo to be the same name as your nanoHUB tool, then it would be:
-```
-/usr/bin/invoke_app "$@" -C "start_jupyter -A -T @tool iu399sp19p099.ipynb" -t iu399sp19p099 \
-```
-The reason we edit this file in-place is to retain its executable mode. It should be indicated as follows:
-![alt ensure executable](https://github.com/rheiland/tool4nanobio/blob/master/doc/invoke_file_exec_mode.png)
-
-
-* From the status page of your new tool on nanoHUB (e.g., https://nanohub.org/tools/iu399sp19p099/status), click the link to have it installed for testing (below the "We are waiting for You"). (You must be logged in to nanoHUB). Wait 1-3 days for that to happen. You will receive an email from nanoHUB when the tool is installed.
-* After your tool in installed and you have tested it and feel like it’s ready to publish, click the link on your tool’s status page that you approve it (for publishing). You will (I think) then be asked to provide the license for your tool and check a box to verify the license is indeed correct. You will receive an automated email from nanoHUB saying the tool status changed from "Created to Uploaded". The nanoHUB sys admin will then need to compile your code and deploy it there. You will receive another email when the tool is ready to test on nanoHUB.
-
-
 ## More verbosely (this needs to be revised)
 
 Here is an example walk-through using commands in a (Unix-like) shell
@@ -172,13 +175,13 @@ Usage: %s </full/path/to/PhysiCell-proj>
 ~/git/ise_proj1/src$ python copy_myproj.py ~/dev/PhysiCell_heterogeneity
 num_args= 2
 path_to_proj= /Users/heiland/dev/PhysiCell_heterogeneity
-/Users/heiland/dev/PhysiCell_heterogeneity/core  -->  ./core
-/Users/heiland/dev/PhysiCell_heterogeneity/BioFVM  -->  ./BioFVM
-/Users/heiland/dev/PhysiCell_heterogeneity/modules  -->  ./modules
-/Users/heiland/dev/PhysiCell_heterogeneity/custom_modules  -->  ./custom_modules
-/Users/heiland/dev/PhysiCell_heterogeneity/Makefile  -->  ./Makefile
-/Users/heiland/dev/PhysiCell_heterogeneity/main.cpp  -->  ./main.cpp
-/Users/heiland/dev/PhysiCell_heterogeneity/VERSION.txt  -->  ./VERSION.txt
+/Users/heiland/dev/PhysiCell_heterogeneity/core  --  ./core
+/Users/heiland/dev/PhysiCell_heterogeneity/BioFVM  --  ./BioFVM
+/Users/heiland/dev/PhysiCell_heterogeneity/modules  --  ./modules
+/Users/heiland/dev/PhysiCell_heterogeneity/custom_modules  --  ./custom_modules
+/Users/heiland/dev/PhysiCell_heterogeneity/Makefile  --  ./Makefile
+/Users/heiland/dev/PhysiCell_heterogeneity/main.cpp  --  ./main.cpp
+/Users/heiland/dev/PhysiCell_heterogeneity/VERSION.txt  --  ./VERSION.txt
 
 
 # edit the Makefile:  PROGRAM_NAME := myproj
@@ -245,7 +248,7 @@ Finally, try to run the notebook to display the GUI:
 If your notebook tells you a file is not found, but it's really there, e.g.:
 FileNotFoundError: [Errno 2] No such file or directory: '/Users/heiland/git/ise_proj1/data/PhysiCell_settings.xml'
 
-try the menu: Kernel --> Restart & Run All
+try the menu: Kernel -- Restart & Run All
 ```
 
 If it seems to run OK, commit your code:
@@ -255,6 +258,7 @@ If it seems to run OK, commit your code:
 ...
 ~/git/ise_proj1$ git push
 ```
+-->
 
 <!--
 In the `data` directory, you will run the `xml2jupyter.py` script on the .xml file to 
