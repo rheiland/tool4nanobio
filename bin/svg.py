@@ -11,20 +11,22 @@ import zipfile
 import glob
 from debug import debug_view
 
-hublib_flag = False
-try:
-    from hublib.ui import Download
-    hublib_flag = True
-except:
-    hublib_flag = False
+# hublib_flag = False
+# try:
+#     from hublib.ui import Download
+#     hublib_flag = True
+# except:
+#     hublib_flag = False
 
 
 class SVGTab(object):
 
-    def __init__(self):
+    def __init__(self, nanoHUB):
         # tab_height = '520px'
         # tab_layout = Layout(width='900px',   # border='2px solid black',
         #                     height=tab_height, overflow_y='scroll')
+
+        self.nanoHUB = nanoHUB
 
         self.output_dir = '.'
 
@@ -88,7 +90,7 @@ class SVGTab(object):
                     width='70%')
         row1 = Box(children=items_auto, layout=box_layout)
 
-        if hublib_flag:
+        if self.nanoHUB:
             self.download_button = Download('svg.zip', style='warning', icon='cloud-download', 
                                         tooltip='You need to allow pop-ups in your browser', cb=self.download_cb)
             download_row = HBox([self.download_button.w, Label("Download all cell plots (browser must allow pop-ups).")])
@@ -146,10 +148,11 @@ class SVGTab(object):
         current_frame = frame
         fname = "snapshot%08d.svg" % frame
         full_fname = os.path.join(self.output_dir, fname)
+        # full_fname = os.path.join(os.getcwd(), fname)
         # with debug_view:
         #     print("plot_svg:", full_fname) 
         if not os.path.isfile(full_fname):
-            print("svg.py: Missing output file")   
+            print("svg.py: Missing output file", full_fname)   
             return
 
         xlist = deque()
