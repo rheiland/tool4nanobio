@@ -26,7 +26,7 @@ Variations of running the script might be - from a Unix-like shell:
 $ python setup_new_proj.py  /c/Users/heiland/git/ise_proj1  /c/Users/heiland/dev/PhysiCell_heterogeneity
 $ python setup_new_proj.py  ~/git/ise_proj1  ~/dev/PhysiCell_heterogeneity
 ```
-from a Windows Command Prompt shell:
+from a Windows Command Prompt or PowerShell:
 ```
 C:\Users\heiland\git\tool4nanobio>python setup_new_proj.py  C:\Users\heiland\git\ise_proj1  C:\Users\heiland\dev\PhysiCell_heterogeneity
 ```
@@ -52,21 +52,15 @@ PROGRAM_NAME := myproj
 ```
 ~/git/ise_proj1$ jupyter notebook ise_proj1.ipynb
 ```
-8. If it's successful, commit everything to the GitHub repo for your new project.
-9. Perform steps to create your nanoHUB tool (optional) - see section below.
 
-## Testing your notebook locally
-
-From the root directory of your new project (your cloned repo), run:
-```
-~/git/ise_proj1$ jupyter notebook <your-repo>.ipynb
-```
 Select ‘Cell’ → ‘Run All’ menu item to display the notebook (or, if necessary, select the 'Kernel' → ‘Restart & Run All’ menu item).
 Click the ‘Run’ button in the GUI to see if it works. Output files should appear in the ```tmpdir``` sub-directory.
 
+8. If it's successful, commit everything to the GitHub repo for your new project.
+9. Perform steps to create your nanoHUB tool (optional) - see section below.
+
 <!--
 If everything appears to be correct and you want to test and possibly publish your tool on nanoHUB:
-
 * Delete tool4nanobio.zip in your repo. Optionally, clean up (delete) /src/*.o
 * Commit files to your GitHub repo.
 -->
