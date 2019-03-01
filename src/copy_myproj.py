@@ -1,3 +1,5 @@
+# DEPRECATED -- the functionality of this script should now be performed by setup_new_proj.py in the root dir
+#
 # Copy the relevant files and subdirs from your PhysiCell project to this directory
 # Usage:
 #   python copy_myproj.py </full/path/to/PhysiCell-proj>
