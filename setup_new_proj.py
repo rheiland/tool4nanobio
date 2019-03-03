@@ -24,7 +24,7 @@ num_args = len(sys.argv)
 print('num_args=',num_args)
 if (num_args < 3):
 #    print("Usage: %s <full-path-to-new-project>  <simple-project-name>  <full-path-to-PhysiCell-project>")
-    print("Usage: %s <full-path-to-new-project>  <full-path-to-PhysiCell-project>")
+    print("Usage: %s <full-path-to-new-project>  <full-path-to-PhysiCell-project> [<makefile name> <main cpp>]")
 #    print("Usage: %s <your repo name>")
     sys.exit(1)
 #print('sys.argv[0] = ',sys.argv[0])
@@ -37,6 +37,12 @@ print('proj_name = ',proj_name)
 
 physicell_fullpath= sys.argv[2]
 print('physicell_fullpath = ',physicell_fullpath)
+
+make_file = "Makefile"
+main_cpp_file = "main.cpp"
+if (num_args > 3):
+    make_file = sys.argv[3]
+    main_cpp_file = sys.argv[4]
 
 print("\n STEP 1: copy tool4nanobio to new project:\n")
 for elm in os.listdir('.'):
@@ -77,13 +83,43 @@ for dname in dir_names:
     except:
         print("   can't copy ... maybe you already did?")
 
-from_file = os.path.join(physicell_fullpath, "Makefile")
+#from_file = os.path.join(physicell_fullpath, "Makefile")
+from_file = os.path.join(physicell_fullpath, make_file)
 to_file = os.path.join(proj_src_dir, "Makefile")
-print(from_file, " --> ", to_file)
-shutil.copy(from_file, to_file)
+print(from_file, " --> ", to_file, " plus, create 'myproj' and insert nanoHUB-specific targets.")
+#shutil.copy(from_file, to_file)
 
-from_file = os.path.join(physicell_fullpath, "main.cpp")
-to_file = os.path.join(proj_src_dir, "main.cpp")
+with open(from_file,"r") as infile:
+    with open(to_file,"w") as outfile:
+        for line in infile:
+            sline = line.split()
+            if len(sline) > 0:
+                if sline[0] == "PROGRAM_NAME":
+                    # print('got PROGRAM_NAME')
+                    newline = sline[0] + sline[1] + " myproj\n"
+                    outfile.write(newline)
+#                    outfile.write("\nUNAME := $(shell uname)\n")
+                elif sline[0] == "clean:":
+                    # print('got ',sline[0])
+#                    outfile.write(line)
+                    nanohub_targets = "# next 2 targets for nanoHUB\ninstall: all\n\tcp $(PROGRAM_NAME) ../bin\n\ndistclean: clean\n\trm -f ../bin/$(PROGRAM_NAME)\n\n"
+                    outfile.write(nanohub_targets)
+                    outfile.write("clean:\n")
+                elif "rm -f $(PROGRAM_NAME)*" in line:  # don't want last "*" on nanoHUB
+#                    outfile.write("\tifeq ($(OS),Windows_NT)\n")
+#                    outfile.write("\t\trm -f $(PROGRAM_NAME)*\n")
+#                    outfile.write("\telse\n")
+#                    outfile.write("\t\trm -f $(PROGRAM_NAME)\n")
+                    outfile.write("\trm -f $(PROGRAM_NAME)\n")  # what happens on Windows?
+                else:
+                    outfile.write(line)
+            else:
+                outfile.write(line)
+
+#from_file = os.path.join(physicell_fullpath, "main.cpp")
+#to_file = os.path.join(proj_src_dir, "main.cpp")
+from_file = os.path.join(physicell_fullpath, main_cpp_file)
+to_file = os.path.join(proj_src_dir, main_cpp_file)
 print(from_file, " --> ", to_file)
 shutil.copy(from_file, to_file)
 
@@ -109,7 +145,8 @@ print(from_file, " --> ", to_file)
 shutil.copy(from_file, to_file)
 
 #------------------------------------
-
+# maybe attempt to execute 'make_my_tool.py' from the new project dir?
+#os.chdir(proj_fullpath)
 
 sys.exit(1)
 

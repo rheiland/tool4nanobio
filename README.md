@@ -13,14 +13,18 @@ This repository helps auto-generate a Jupyter notebook GUI for PhysiCell-related
 
 1. Create a new, public repository on github.com (not the IU github) and clone it to your computer. This will be your "project repo". Call it whatever you want (it doesn't have to match the name of your eventual nanoHUB tool). If you create a README.md, make a backup copy in case it gets overwritten in the steps below. For the example steps below, we choose the name "ise_proj1".
 2. Clone this tool4nanobio repo to your computer.
-3. In a command line shell window (terminal or command prompt), from the tool4nanobio directory, run the Python script called ```setup_new_proj.py```. If successful, this will copy (nearly) all necessary files into your new project repo (step 1). You provide two arguments to the script:
+3. In a command line shell window (terminal or command prompt), from the tool4nanobio directory, run the Python script called ```setup_new_proj.py```. If successful, this will copy (nearly) all necessary files into your new project repo (step 1). You provide two required arguments (and two optional) to the script:
 ```
-<full-path-to-new-project>  <full-path-to-PhysiCell-project>
+<full-path-to-new-project>  <full-path-to-PhysiCell-project> [<makefile name> <main cpp>]
 ```
+The default names of the optional arguments will simply be "Makefile" and "main.cpp".
+
 Variations of running the script might be - from a Unix-like shell:
 ```
 ~/git/tool4nanobio$ python setup_new_proj.py  /Users/heiland/git/ise_proj1  /Users/heiland/dev/PhysiCell_heterogeneity
 ~/git/tool4nanobio$ python setup_new_proj.py  ~/git/ise_proj1  ~/dev/PhysiCell_heterogeneity
+
+~/git/tool4nanobio$ python setup_new_proj.py  ~/git/ise_proj1  ~/dev/PhysiCell_heterogeneity Make_hetero main_hetero.cpp
 
 [Windows Git Bash] MINGW64 ~/git/tool4nanobio (master)
 $ python setup_new_proj.py  /c/Users/heiland/git/ise_proj1  /c/Users/heiland/dev/PhysiCell_heterogeneity
