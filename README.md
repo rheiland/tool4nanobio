@@ -44,13 +44,13 @@ C:\Users\heiland\git\tool4nanobio>python setup_new_proj.py  C:\Users\heiland\git
 PROGRAM_NAME := myproj
 ```
 -->
-4. Build your PhysiCell project in your /src directory and copy the resulting ```myproj``` executable to /bin. See details below.
+4. Build your PhysiCell project in your /src directory and copy the resulting ```myproj``` executable to ../bin:
 ```
 (bash commands)
 ~/git/ise_proj1$ cd src
 ~/git/ise_proj1/src$ make
 ...
-~/git/ise_proj1/src$ mv myproj ../bin
+~/git/ise_proj1/src$ cp myproj ../bin
 ~/git/ise_proj1$ cd ..
 ```
 
