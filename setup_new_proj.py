@@ -29,6 +29,8 @@ if (num_args < 4):
     sys.exit(1)
 #print('sys.argv[0] = ',sys.argv[0])
 proj_fullpath = sys.argv[1]
+if not proj_fullpath[-1].isalnum():
+    proj_fullpath = proj_fullpath[0:-1]
 print('proj_fullpath = ',proj_fullpath)
 
 #proj_name = sys.argv[2]
