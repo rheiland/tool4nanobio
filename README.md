@@ -75,6 +75,7 @@ If everything appears to be correct and you want to test and possibly publish yo
 ## Create a nanoHUB tool (optional)
 
 * If you do not have a nanoHUB account, register for one at https://nanohub.org/register/
+* Students need to be aware that creating an account on nanoHUB is similar to creating an account on any social media platform. Use your good judgment about publicly sharing personal information. For more background, see https://ferpa.iu.edu/safeguarding/index.html
 * On https://nanohub.org/tools/create, fill out the basic information for creating your nanoHUB tool. Tool Name should be 3-15 alphanumeric characters, including at least one non numeric character (e.g., ```iu399sp19p099```). Although not required, it’s probably wise to also use only lowercase characters. Provide the URL to your newly created GitHub repo (e.g., ```https://github.com/...```) and also select the bullet to ```Publish as a Jupyter notebook```. When you finally click the ```Register Tool``` button, you will be told if that tool name has already been taken, however, it may take a few seconds for that to appear. Also, don't worry if you forget to provide some info on this initial form, you can always edit it later.
 
 <!--
