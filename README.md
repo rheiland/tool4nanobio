@@ -128,6 +128,12 @@ The src/Makefile needs to be edited so that:
 ```
 PROGRAM_NAME := myproj
 ```
+and in the `all` target, comment out copying the executable to ../bin:
+```
+all: main.cpp $(ALL_OBJECTS)
+	$(COMPILE_COMMAND) -o $(PROGRAM_NAME) $(ALL_OBJECTS) main.cpp 
+#	cp $(PROGRAM_NAME) ../bin
+```
 also, be sure it has the following targets present (with the necessary leading tabs):
 ```
 install: all
