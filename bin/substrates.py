@@ -10,22 +10,14 @@ import scipy.io
 import xml.etree.ElementTree as ET  # https://docs.python.org/2/library/xml.etree.elementtree.html
 import glob
 import zipfile
+from hublib.ui import Download
 from debug import debug_view 
-
-hublib_flag = False
-try:
-    from hublib.ui import Download
-    hublib_flag = True
-except:
-    hublib_flag = False
 
 
 class SubstrateTab(object):
 
-    def __init__(self, nanoHUB):
+    def __init__(self):
         
-        self.nanoHUB = nanoHUB
-
         self.output_dir = '.'
 #        self.output_dir = 'tmpdir'
 
@@ -181,24 +173,20 @@ class SubstrateTab(object):
                             align_items='stretch',
                             flex_direction='row',
                             display='flex'))
-        if self.nanoHUB:
-            self.download_button = Download('mcds.zip', style='warning', icon='cloud-download', 
+        self.download_button = Download('mcds.zip', style='warning', icon='cloud-download', 
                                             tooltip='Download data', cb=self.download_cb)
-            download_row = HBox([self.download_button.w, Label("Download all substrate data (browser must allow pop-ups).")])
+        download_row = HBox([self.download_button.w, Label("Download all substrate data (browser must allow pop-ups).")])
 
 #        self.tab = VBox([row1, row2, self.mcds_plot])
-            self.tab = VBox([row1, row2, self.mcds_plot, download_row])
-        else:
-            self.tab = VBox([row1, row2, self.mcds_plot])
+        self.tab = VBox([row1, row2, self.mcds_plot, download_row])
 
     #---------------------------------------------------
     def update_dropdown_fields(self, data_dir):
         # print('update_dropdown_fields called --------')
-        # self.output_dir = data_dir
+        self.output_dir = data_dir
         tree = None
         try:
-            # fname = os.path.join(self.output_dir, "initial.xml")
-            fname = os.path.join(data_dir, "initial.xml")
+            fname = os.path.join(self.output_dir, "initial.xml")
             tree = ET.parse(fname)
             xml_root = tree.getroot()
         except:
@@ -320,15 +308,11 @@ class SubstrateTab(object):
 #        fullname = fname
         full_fname = os.path.join(self.output_dir, fname)
         full_xml_fname = os.path.join(self.output_dir, xml_fname)
-        # full_fname = os.path.join(os.getcwd(), fname)
-        # full_xml_fname = os.path.join(os.getcwd(), xml_fname)
 #        self.output_dir = '.'
 
 #        if not os.path.isfile(fullname):
         if not os.path.isfile(full_fname):
-#            print("File does not exist: ", full_fname)
-#            print("No: ", full_fname)
-            print("substrates.py: Missing output file", full_fname)  # No:  output00000000_microenvironment0.mat
+            print("Once output files are generated, click the slider.")  # No:  output00000000_microenvironment0.mat
             return
 
 #        tree = ET.parse(xml_fname)
@@ -358,6 +342,20 @@ class SubstrateTab(object):
         #     im = ax.imshow(f.reshape(100,100), interpolation='nearest', cmap=cmap, extent=[0,20, 0,20])
         #     ax.grid(False)
 
+        # print("substrates.py: ------- numx, numy = ", self.numx, self.numy )
+        if (self.numx == 0):   # need to parse vals from the config.xml
+            fname = os.path.join(self.output_dir, "config.xml")
+            tree = ET.parse(fname)
+            xml_root = tree.getroot()
+            xmin = float(xml_root.find(".//x_min").text)
+            xmax = float(xml_root.find(".//x_max").text)
+            dx = float(xml_root.find(".//dx").text)
+            ymin = float(xml_root.find(".//y_min").text)
+            ymax = float(xml_root.find(".//y_max").text)
+            dy = float(xml_root.find(".//dy").text)
+            self.numx =  math.ceil( (xmax - xmin) / dx)
+            self.numy =  math.ceil( (ymax - ymin) / dy)
+
         xgrid = M[0, :].reshape(self.numy, self.numx)
         ygrid = M[1, :].reshape(self.numy, self.numx)
 
@@ -380,7 +378,6 @@ class SubstrateTab(object):
         if (contour_ok):
             plt.title(title_str)
             plt.colorbar(my_plot)
-
         axes_min = 0
         axes_max = 2000
         # plt.xlim(axes_min, axes_max)

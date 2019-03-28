@@ -7,26 +7,18 @@ import xml.etree.ElementTree as ET
 import matplotlib.pyplot as plt
 import matplotlib.colors as mplc
 import numpy as np
+from hublib.ui import Download
 import zipfile
 import glob
 from debug import debug_view
 
-hublib_flag = False
-try:
-    from hublib.ui import Download
-    hublib_flag = True
-except:
-    hublib_flag = False
-
 
 class SVGTab(object):
 
-    def __init__(self, nanoHUB):
+    def __init__(self):
         # tab_height = '520px'
         # tab_layout = Layout(width='900px',   # border='2px solid black',
         #                     height=tab_height, overflow_y='scroll')
-
-        self.nanoHUB = nanoHUB
 
         self.output_dir = '.'
 
@@ -90,15 +82,12 @@ class SVGTab(object):
                     width='70%')
         row1 = Box(children=items_auto, layout=box_layout)
 
-        if self.nanoHUB:
-            self.download_button = Download('svg.zip', style='warning', icon='cloud-download', 
+        self.download_button = Download('svg.zip', style='warning', icon='cloud-download', 
                                         tooltip='You need to allow pop-ups in your browser', cb=self.download_cb)
-            download_row = HBox([self.download_button.w, Label("Download all cell plots (browser must allow pop-ups).")])
+        download_row = HBox([self.download_button.w, Label("Download all cell plots (browser must allow pop-ups).")])
 #        self.tab = VBox([row1, self.svg_plot, self.download_button.w], layout=tab_layout)
 #        self.tab = VBox([row1, self.svg_plot, self.download_button.w])
-            self.tab = VBox([row1, self.svg_plot, download_row])
-        else:
-            self.tab = VBox([row1, self.svg_plot])
+        self.tab = VBox([row1, self.svg_plot, download_row])
 
     def update(self, rdir=''):
         # with debug_view:
@@ -148,11 +137,10 @@ class SVGTab(object):
         current_frame = frame
         fname = "snapshot%08d.svg" % frame
         full_fname = os.path.join(self.output_dir, fname)
-        # full_fname = os.path.join(os.getcwd(), fname)
         # with debug_view:
         #     print("plot_svg:", full_fname) 
         if not os.path.isfile(full_fname):
-            print("svg.py: Missing output file", full_fname)   
+            print("Once output files are generated, click the slider.")   
             return
 
         xlist = deque()

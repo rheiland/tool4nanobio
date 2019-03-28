@@ -6,7 +6,7 @@ import shutil
 import math
 import datetime
 import tempfile
-import subprocess
+from about import AboutTab
 from config import ConfigTab
 from user_params import UserTab
 from svg import SVGTab
@@ -15,42 +15,34 @@ from pathlib import Path
 from debug import debug_view
 import platform
 
-hublib_flag = False
-exec_file = os.path.join(os.getcwd(), "bin", "myproj")
+hublib_flag = True
 if platform.system() != 'Windows':
     try:
 #        print("Trying to import hublib.ui")
         from hublib.ui import RunCommand, Submit
-        hublib_flag = True
     except:
         hublib_flag = False
-else:
-    exec_file = os.path.join(os.getcwd(), "bin", "myproj.exe")
-# print("exec_file = ",exec_file)
 
 
 # join_our_list = "(Join/ask questions at https://groups.google.com/forum/#!forum/physicell-users)\n"
 
-tab_height = 'auto'
-tab_layout = widgets.Layout(width='auto',   # border='2px solid black',
-                            height=tab_height, overflow_y='scroll',)
 
 # create the tabs, but don't display yet
+about_tab = AboutTab()
 config_tab = ConfigTab()
 
-#full_filename = os.path.abspath('data/PhysiCell_settings.xml')
 xml_file = os.path.join('data', 'PhysiCell_settings.xml')
 full_xml_filename = os.path.abspath(xml_file)
-
-nanoHUB_flag = False
-if( 'HOME' in os.environ.keys() ):
-    nanoHUB_flag = "home/nanohub" in os.environ['HOME']
 
 tree = ET.parse(full_xml_filename)  # this file cannot be overwritten; part of tool distro
 xml_root = tree.getroot()
 user_tab = UserTab()
-svg = SVGTab(nanoHUB_flag)
-sub = SubstrateTab(nanoHUB_flag)
+svg = SVGTab()
+sub = SubstrateTab()
+
+nanoHUB_flag = False
+if( 'HOME' in os.environ.keys() ):
+    nanoHUB_flag = "home/nanohub" in os.environ['HOME']
 
 
 def read_config_cb(_b):
@@ -87,12 +79,9 @@ def read_config_cb(_b):
         svg.update('')
         sub.update('')
         
+
 # Using the param values in the GUI, write a new .xml config file
 def write_config_file(name):
-    # Read in the default xml config file, just to get a valid 'root' to populate a new one
-#    full_filename = os.path.abspath('data/PhysiCell_settings.xml')  # does Windows like this?
-#    xml_file = os.path.join('data', 'PhysiCell_settings.xml')
-#    full_filename = os.path.abspath(xml_file)
     # with debug_view:
     #     print("write_config_file: based on ",full_filename)
     tree = ET.parse(full_xml_filename)  # this file cannot be overwritten; part of tool distro
@@ -104,12 +93,11 @@ def write_config_file(name):
     # update substrate mesh layout (beware of https://docs.python.org/3/library/functions.html#round)
     sub.numx =  math.ceil( (config_tab.xmax.value - config_tab.xmin.value) / config_tab.xdelta.value )
     sub.numy =  math.ceil( (config_tab.ymax.value - config_tab.ymin.value) / config_tab.ydelta.value )
-    # print("------- sub.numx, sub.numy = ", sub.numx, sub.numy )
+    # print("------- sub.numx, sub.numy = ", sub.numx, sub.numy)
 
 
 # callback from write_config_button
 def write_config_file_cb(b):
-#    dirname = os.path.expanduser('~/.local/share/tool4nanobio')  # does Windows like this?
     path_to_share = os.path.join('~', '.local','share','tool4nanobio')
     dirname = os.path.expanduser(path_to_share)
 
@@ -119,14 +107,11 @@ def write_config_file_cb(b):
     name = os.path.join(dirname, val)
     write_config_file(name)
 
+
 # Fill the "Load Config" dropdown widget with valid cached results (and 
 # default & previous config options)
 def get_config_files():
-#    xml_file = os.path.join('data', 'PhysiCell_settings.xml')
-#    cf = {'DEFAULT': os.path.abspath('data/PhysiCell_settings.xml')}  # does Windows like this?
-#    cf = {'DEFAULT': os.path.abspath(xml_file)}
     cf = {'DEFAULT': full_xml_filename}
-#    dirname = os.path.expanduser('~/.local/share/tool4nanobio')  # does Windows like this?
     path_to_share = os.path.join('~', '.local','share','tool4nanobio')
     dirname = os.path.expanduser(path_to_share)
     try:
@@ -146,7 +131,7 @@ def get_config_files():
             cachedir = os.environ['CACHEDIR']
             full_path = os.path.join(cachedir, "tool4nanobio")
         except:
-            print("Exception in get_config_files: env var CACHEDIR not set.")
+            print("Exception in get_config_files")
             return cf
 
     # Put all those cached (full) dirs into a list
@@ -162,6 +147,7 @@ def get_config_files():
     sorted_dirs = sorted(dirs, key=os.path.getctime, reverse=True)
     # with debug_view:
     #     print(sorted_dirs)
+
     # Get a list of timestamps associated with each dir
     sorted_dirs_dates = [str(datetime.datetime.fromtimestamp(os.path.getctime(x))) for x in sorted_dirs]
     # Create a dict of {timestamp:dir} pairs
@@ -170,6 +156,7 @@ def get_config_files():
     # with debug_view:
     #     print(cf)
     return cf
+
 
 # Using params in a config (.xml) file, fill GUI widget values in each of the "input" tabs
 def fill_gui_params(config_file):
@@ -209,7 +196,7 @@ def run_done_func(s, rdir):
     #     print('RDF DONE')
 
 
-# This is used now for the (smart) RunCommand
+# This is used now for the ("smart") RunCommand
 def run_sim_func(s):
     # with debug_view:
     #     print('run_sim_func')
@@ -227,7 +214,7 @@ def run_sim_func(s):
     os.makedirs('tmpdir')
 
     # write the default config file to tmpdir
-    new_config_file = "tmpdir/config.xml"  # use Path
+    new_config_file = "tmpdir/config.xml"  # use Path; work on Windows?
     write_config_file(new_config_file)  
 
     with open(new_config_file) as f:
@@ -263,13 +250,11 @@ def outcb(s):
         sub.update('')
     return s
 
-# Callback for the "dumb" Run button (without hublib.ui)
+
+# Callback for the ("dumb") 'Run' button (without hublib.ui)
 def run_button_cb(s):
 #    with debug_view:
 #        print('run_button_cb')
-
-    # os.chdir(homedir)  # /tmpdir
-    os.chdir( os.path.join(homedir, output_dir) )
 
 #    new_config_file = "config.xml"
     new_config_file = full_xml_filename
@@ -277,13 +262,7 @@ def run_button_cb(s):
 #    subprocess.call(["biorobots", xml_file_out])
 #    subprocess.call(["myproj", new_config_file])   # spews to shell, but not ctl-C'able
 #    subprocess.call(["myproj", new_config_file], shell=True)  # no
-#    print("cwd = ", os.getcwd() )
-#    print("exec_file = ",exec_file)
-    if os.path.isfile(exec_file):
-        subprocess.Popen([exec_file, new_config_file])
-    else:
-        print("'myproj' executable missing from /bin directory")
-
+    subprocess.Popen(["myproj", new_config_file])
 
 if nanoHUB_flag:
     run_button = Submit(label='Run',
@@ -299,7 +278,7 @@ else:
                             cachename='tool4nanobio',
                             showcache=False,
                             outcb=outcb)  
-    else:  # "dumb" Run button
+    else:
         run_button = widgets.Button(
             description='Run',
             button_style='success',  # 'success', 'info', 'warning', 'danger' or ''
@@ -316,52 +295,30 @@ read_config = widgets.Dropdown(
 read_config.style = {'description_width': '%sch' % str(len(read_config.description) + 1)}
 read_config.observe(read_config_cb, names='value') 
 
-# write_config_button = widgets.Button(
-#     description='Write config file',
-#     button_style='success',  # 'success', 'info', 'warning', 'danger' or ''
-#     tooltip='Generate XML',
-# )
-# write_config_button.on_click(write_config_file_cb)
-# write_config_box = widgets.Text(
-#     placeholder='my_nanobio_settings.xml',
-#     description='',
-# )
-# write_config_row = widgets.HBox([write_config_button, write_config_box])
-
-titles = ['Config Basics', 'User Params', 'Cell Plots', 'Substrate Plots']
-tabs = widgets.Tab(children=[config_tab.tab, user_tab.tab, svg.tab, sub.tab],
+tab_height = 'auto'
+tab_layout = widgets.Layout(width='auto',height=tab_height, overflow_y='scroll',)   # border='2px solid black',
+titles = ['About', 'Config Basics', 'User Params', 'Out: Cell Plots', 'Out: Substrate Plots']
+tabs = widgets.Tab(children=[about_tab.tab, config_tab.tab, user_tab.tab, svg.tab, sub.tab],
                    _titles={i: t for i, t in enumerate(titles)},
                    layout=tab_layout)
 
 homedir = os.getcwd()
 
+tool_title = widgets.Label(r'\(\textbf{tool4nanobio}\)')
 if nanoHUB_flag:
+    # define this, but don't use (yet)
     remote_cb = widgets.Checkbox(indent=False, value=False, description='Submit as Batch Job to Clusters/Grid')
-    #gui = widgets.VBox(children=[read_config, tabs, write_config_row, remote_cb, run_button.w])
 
-    # Let's not allow for batch runs for this tool.
-    # gui = widgets.VBox(children=[read_config, tabs, remote_cb, run_button.w])
-    gui = widgets.VBox(children=[read_config, tabs, run_button.w])
-    #gui = widgets.VBox(children=[tabs, run_button.w])
+    top_row = widgets.HBox(children=[read_config, tool_title])
+    gui = widgets.VBox(children=[top_row, tabs, run_button.w])
 else:
-    #gui = widgets.VBox(children=[read_config, tabs, write_config_row, run_button.w])
-    #gui = widgets.VBox(children=[read_config, tabs, run_button.w])
-    if (hublib_flag):
-        gui = widgets.VBox(children=[tabs, run_button.w])
-    else:
-        gui = widgets.VBox(children=[tabs, run_button])
+    top_row = widgets.HBox(children=[tool_title])
+    gui = widgets.VBox(children=[top_row, tabs, run_button.w])
 
 fill_gui_params(read_config.options['DEFAULT'])
 
 # pass in (relative) directory where output data is located
-#svg.update(read_config.value)
-#output_dir = "output"
 output_dir = "tmpdir"
-output_dir = os.getcwd()
-output_dir = os.path.join(os.getcwd(), "tmpdir")
 svg.update(output_dir)
-#sub.update_dropdown_fields(output_dir)
-# sub.update_dropdown_fields("data")
-data_dir = os.path.join(os.getcwd(), "data")
-sub.update_dropdown_fields(data_dir)
+sub.update_dropdown_fields("data")
 sub.update(output_dir)
