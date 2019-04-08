@@ -7,10 +7,19 @@ import xml.etree.ElementTree as ET
 import matplotlib.pyplot as plt
 import matplotlib.colors as mplc
 import numpy as np
-from hublib.ui import Download
 import zipfile
 import glob
 from debug import debug_view
+
+hublib_flag = True
+if platform.system() != 'Windows':
+    try:
+#        print("Trying to import hublib.ui")
+        from hublib.ui import Download
+    except:
+        hublib_flag = False
+else:
+    hublib_flag = False
 
 
 class SVGTab(object):
@@ -82,12 +91,15 @@ class SVGTab(object):
                     width='70%')
         row1 = Box(children=items_auto, layout=box_layout)
 
-        self.download_button = Download('svg.zip', style='warning', icon='cloud-download', 
-                                        tooltip='You need to allow pop-ups in your browser', cb=self.download_cb)
-        download_row = HBox([self.download_button.w, Label("Download all cell plots (browser must allow pop-ups).")])
-#        self.tab = VBox([row1, self.svg_plot, self.download_button.w], layout=tab_layout)
-#        self.tab = VBox([row1, self.svg_plot, self.download_button.w])
-        self.tab = VBox([row1, self.svg_plot, download_row])
+        if (hublib_flag):
+            self.download_button = Download('svg.zip', style='warning', icon='cloud-download', 
+                                            tooltip='You need to allow pop-ups in your browser', cb=self.download_cb)
+            download_row = HBox([self.download_button.w, Label("Download all cell plots (browser must allow pop-ups).")])
+    #        self.tab = VBox([row1, self.svg_plot, self.download_button.w], layout=tab_layout)
+    #        self.tab = VBox([row1, self.svg_plot, self.download_button.w])
+            self.tab = VBox([row1, self.svg_plot, download_row])
+        else:
+            self.tab = VBox([row1, self.svg_plot])
 
     def update(self, rdir=''):
         # with debug_view:

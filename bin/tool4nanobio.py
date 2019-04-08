@@ -22,6 +22,8 @@ if platform.system() != 'Windows':
         from hublib.ui import RunCommand, Submit
     except:
         hublib_flag = False
+else:
+    hublib_flag = False
 
 
 # join_our_list = "(Join/ask questions at https://groups.google.com/forum/#!forum/physicell-users)\n"

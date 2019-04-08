@@ -10,8 +10,17 @@ import scipy.io
 import xml.etree.ElementTree as ET  # https://docs.python.org/2/library/xml.etree.elementtree.html
 import glob
 import zipfile
-from hublib.ui import Download
 from debug import debug_view 
+
+hublib_flag = True
+if platform.system() != 'Windows':
+    try:
+#        print("Trying to import hublib.ui")
+        from hublib.ui import Download
+    except:
+        hublib_flag = False
+else:
+    hublib_flag = False
 
 
 class SubstrateTab(object):
@@ -173,12 +182,15 @@ class SubstrateTab(object):
                             align_items='stretch',
                             flex_direction='row',
                             display='flex'))
-        self.download_button = Download('mcds.zip', style='warning', icon='cloud-download', 
-                                            tooltip='Download data', cb=self.download_cb)
-        download_row = HBox([self.download_button.w, Label("Download all substrate data (browser must allow pop-ups).")])
+        if (hublib_flag):
+            self.download_button = Download('mcds.zip', style='warning', icon='cloud-download', 
+                                                tooltip='Download data', cb=self.download_cb)
+            download_row = HBox([self.download_button.w, Label("Download all substrate data (browser must allow pop-ups).")])
 
-#        self.tab = VBox([row1, row2, self.mcds_plot])
-        self.tab = VBox([row1, row2, self.mcds_plot, download_row])
+    #        self.tab = VBox([row1, row2, self.mcds_plot])
+            self.tab = VBox([row1, row2, self.mcds_plot, download_row])
+        else:
+            self.tab = VBox([row1, row2])
 
     #---------------------------------------------------
     def update_dropdown_fields(self, data_dir):
