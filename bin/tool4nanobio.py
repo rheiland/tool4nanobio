@@ -12,8 +12,9 @@ from user_params import UserTab
 from svg import SVGTab
 from substrates import SubstrateTab
 from pathlib import Path
-from debug import debug_view
 import platform
+import subprocess
+from debug import debug_view
 
 hublib_flag = True
 if platform.system() != 'Windows':
@@ -258,14 +259,35 @@ def run_button_cb(s):
 #    with debug_view:
 #        print('run_button_cb')
 
-#    new_config_file = "config.xml"
-    new_config_file = full_xml_filename
-    write_config_file(new_config_file)
-#    subprocess.call(["biorobots", xml_file_out])
-#    subprocess.call(["myproj", new_config_file])   # spews to shell, but not ctl-C'able
-#    subprocess.call(["myproj", new_config_file], shell=True)  # no
-    subprocess.Popen(["myproj", new_config_file])
+#    new_config_file = full_xml_filename
+    # print("new_config_file = ", new_config_file)
+#    write_config_file(new_config_file)
 
+    # make sure we are where we started
+    os.chdir(homedir)
+
+    # remove any previous data
+    # NOTE: this dir name needs to match the <folder>  in /data/<config_file.xml>
+    os.system('rm -rf tmpdir*')
+    if os.path.isdir('tmpdir'):
+        # something on NFS causing issues...
+        tname = tempfile.mkdtemp(suffix='.bak', prefix='tmpdir_', dir='.')
+        shutil.move('tmpdir', tname)
+    os.makedirs('tmpdir')
+
+    # write the default config file to tmpdir
+    new_config_file = "tmpdir/config.xml"  # use Path; work on Windows?
+    write_config_file(new_config_file)  
+
+    tdir = os.path.abspath('tmpdir')
+    os.chdir(tdir)  # operate from tmpdir; temporary output goes here.  may be copied to cache later
+    svg.update(tdir)
+    sub.update(tdir)
+
+    subprocess.Popen(["../bin/myproj", "config.xml"])
+
+
+#-------------------------------------------------
 if nanoHUB_flag:
     run_button = Submit(label='Run',
                        start_func=run_sim_func,
