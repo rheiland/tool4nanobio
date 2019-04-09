@@ -50,7 +50,7 @@ PROGRAM_NAME := myproj
 ~/git/ise_proj1$ cd src
 ~/git/ise_proj1/src$ make
 ...
-~/git/ise_proj1/src$ cp myproj ../bin
+~/git/ise_proj1/src$ cp myproj ../bin      # will be "myproj.exe" on Windows
 ~/git/ise_proj1$ cd ..
 ```
 
