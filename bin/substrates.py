@@ -9,6 +9,7 @@ import matplotlib.colors as mplc
 import scipy.io
 import xml.etree.ElementTree as ET  # https://docs.python.org/2/library/xml.etree.elementtree.html
 import glob
+import platform
 import zipfile
 from debug import debug_view 
 

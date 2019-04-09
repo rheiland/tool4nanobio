@@ -9,6 +9,7 @@ import matplotlib.colors as mplc
 import numpy as np
 import zipfile
 import glob
+import platform
 from debug import debug_view
 
 hublib_flag = True
