@@ -191,7 +191,8 @@ class SubstrateTab(object):
     #        self.tab = VBox([row1, row2, self.mcds_plot])
             self.tab = VBox([row1, row2, self.mcds_plot, download_row])
         else:
-            self.tab = VBox([row1, row2])
+            # self.tab = VBox([row1, row2])
+            self.tab = VBox([row1, row2, self.mcds_plot])
 
     #---------------------------------------------------
     def update_dropdown_fields(self, data_dir):
