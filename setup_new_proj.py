@@ -50,6 +50,9 @@ if (num_args > 4):
     main_cpp_file = sys.argv[5]
 
 print("\n STEP 1: copy tool4nanobio to new project:\n")
+to_file = os.path.join(proj_fullpath, ".travis.yml")        # (from_file, to_file)
+shutil.copy(".travis.yml", to_file)
+
 for elm in os.listdir('.'):
     try:
         if (elm[0] != '.'):  # avoid /.git, etc
