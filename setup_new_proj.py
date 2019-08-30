@@ -222,6 +222,11 @@ try:
 except:
     print("  ---> Cannot copy data/user_params.py to bin/user_params.py")
     print("         You will need to do that manually.\n")
+try:
+    shutil.copy("microenv_params.py", new_file)
+except:
+    print("  ---> Cannot copy data/microenv_params.py to bin/microenv_params.py")
+    print("         You will need to do that manually.\n")
 
 if platform.system() != 'Windows':
     try:

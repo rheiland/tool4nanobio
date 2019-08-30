@@ -8,6 +8,7 @@ import datetime
 import tempfile
 from about import AboutTab
 from config import ConfigTab
+from microenv_params import MicroenvTab
 from user_params import UserTab
 from svg import SVGTab
 from substrates import SubstrateTab
@@ -39,6 +40,7 @@ full_xml_filename = os.path.abspath(xml_file)
 
 tree = ET.parse(full_xml_filename)  # this file cannot be overwritten; part of tool distro
 xml_root = tree.getroot()
+microenv_tab = MicroenvTab()
 user_tab = UserTab()
 svg = SVGTab()
 sub = SubstrateTab()
@@ -90,6 +92,7 @@ def write_config_file(name):
     tree = ET.parse(full_xml_filename)  # this file cannot be overwritten; part of tool distro
     xml_root = tree.getroot()
     config_tab.fill_xml(xml_root)
+    microenv_tab.fill_xml(xml_root)
     user_tab.fill_xml(xml_root)
     tree.write(name)
 
@@ -134,7 +137,7 @@ def get_config_files():
             cachedir = os.environ['CACHEDIR']
             full_path = os.path.join(cachedir, "tool4nanobio")
         except:
-            print("Exception in get_config_files")
+            # print("Exception in get_config_files")
             return cf
 
     # Put all those cached (full) dirs into a list
@@ -168,6 +171,7 @@ def fill_gui_params(config_file):
     tree = ET.parse(config_file)
     xml_root = tree.getroot()
     config_tab.fill_gui(xml_root)
+    microenv_tab.fill_gui(xml_root)
     user_tab.fill_gui(xml_root)
 
 
@@ -311,18 +315,19 @@ else:
         run_button.on_click(run_button_cb)
 
 
-read_config = widgets.Dropdown(
-    description='Load Config',
-    options=get_config_files(),
-    tooltip='Config File or Previous Run',
-)
-read_config.style = {'description_width': '%sch' % str(len(read_config.description) + 1)}
-read_config.observe(read_config_cb, names='value') 
+if nanoHUB_flag or hublib_flag:
+    read_config = widgets.Dropdown(
+        description='Load Config',
+        options=get_config_files(),
+        tooltip='Config File or Previous Run',
+    )
+    read_config.style = {'description_width': '%sch' % str(len(read_config.description) + 1)}
+    read_config.observe(read_config_cb, names='value') 
 
 tab_height = 'auto'
 tab_layout = widgets.Layout(width='auto',height=tab_height, overflow_y='scroll',)   # border='2px solid black',
-titles = ['About', 'Config Basics', 'User Params', 'Out: Cell Plots', 'Out: Substrate Plots']
-tabs = widgets.Tab(children=[about_tab.tab, config_tab.tab, user_tab.tab, svg.tab, sub.tab],
+titles = ['About', 'Config Basics', 'Microenvironment', 'User Params', 'Out: Cell Plots', 'Out: Substrate Plots']
+tabs = widgets.Tab(children=[about_tab.tab, config_tab.tab, microenv_tab.tab, user_tab.tab, svg.tab, sub.tab],
                    _titles={i: t for i, t in enumerate(titles)},
                    layout=tab_layout)
 
