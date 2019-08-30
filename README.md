@@ -162,7 +162,7 @@ e.g., “python make_my_tool.py ise_proj1"    <!-- iu399sp19p001” -->
   
 This script will do a number of things: 
 * rename two files: <!-- in the /middleware/invoke bash script, and --> the name of the notebook (```.ipynb```, in the root directory) and the primary Python module (in /bin).
-* run the xml2jupyter.py script on data/PhysiCell_settings.xml and copy the resulting user_params.py into the /bin directory.
+* run the xml2jupyter.py script on data/PhysiCell_settings.xml and copy the resulting user_params.py and microenv_params.py into the /bin directory.
 * attempt to install the “hublib” Python module that provides the fancy “Run” button widget (with Output and Cancel features).
 
 Copy the “initial.xml”, from the output you generated when you ran your project in its original location, into this repo's /data directory.
