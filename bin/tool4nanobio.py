@@ -340,11 +340,12 @@ if nanoHUB_flag or hublib_flag:
 
     top_row = widgets.HBox(children=[read_config, tool_title])
     gui = widgets.VBox(children=[top_row, tabs, run_button.w])
+    fill_gui_params(read_config.options['DEFAULT'])
 else:
     top_row = widgets.HBox(children=[tool_title])
     gui = widgets.VBox(children=[top_row, tabs, run_button])
+    fill_gui_params("data/PhysiCell_settings.xml")
 
-fill_gui_params(read_config.options['DEFAULT'])
 
 # pass in (relative) directory where output data is located
 output_dir = "tmpdir"
