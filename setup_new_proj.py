@@ -107,10 +107,16 @@ with open(from_file,"r") as infile:
                     newline = sline[0] + sline[1] + " myproj\n"
                     outfile.write(newline)
 #                    outfile.write("\nUNAME := $(shell uname)\n")
+                elif sline[0][0:6] == "CFLAGS":
+                    newline = "# remove the -march arg to avoid SIGILL error on nanoHUB\n"
+                    outfile.write(newline)
+                    newline = "CFLAGS := -O3 -fomit-frame-pointer -mfpmath=both -fopenmp -m64 -std=c++11\n"
+                    outfile.write(newline)
                 elif sline[0] == "clean:":
                     # print('got ',sline[0])
 #                    outfile.write(line)
-                    nanohub_targets = "# next 2 targets for nanoHUB\ninstall: all\n\tcp $(PROGRAM_NAME) ../bin\n\ndistclean: clean\n\trm -f ../bin/$(PROGRAM_NAME)\n\n"
+                    # nanohub_targets = "# next 2 targets for nanoHUB\ninstall: all\n\tcp $(PROGRAM_NAME) ../bin\n\ndistclean: clean\n\trm -f ../bin/$(PROGRAM_NAME)\n\n"
+                    nanohub_targets = "# next 2 targets for nanoHUB\ninstall: \n\t. /etc/environ.sh; use -e -r anaconda3-5.1; make all\n\tcp $(PROGRAM_NAME) ../bin\n\ndistclean: clean\n\trm -f ../bin/$(PROGRAM_NAME)\n\n"
                     outfile.write(nanohub_targets)
                     outfile.write("clean:\n")
                 elif "rm -f $(PROGRAM_NAME)*" in line:  # don't want last "*" on nanoHUB

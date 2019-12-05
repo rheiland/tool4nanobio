@@ -26,29 +26,36 @@ class ConfigTab(object):
 #        label_domain = Label('Domain ($\mu M$):')
         label_domain = Label('Domain (micron):')
         stepsize = 10
+        disable_domain = False
         self.xmin = FloatText(step=stepsize,
             # description='$X_{min}$',
             description='Xmin',
+            disabled = disable_domain,
             layout=Layout(width=constWidth),
         )
         self.ymin = FloatText(step=stepsize,
             description='Ymin',
+            disabled = disable_domain,
             layout=Layout(width=constWidth),
         )
         self.zmin = FloatText(step=stepsize,
             description='Zmin',
+            disabled = disable_domain,
             layout=Layout(width=constWidth),
         )
         self.xmax = FloatText(step=stepsize,
             description='Xmax',
+            disabled = disable_domain,
             layout=Layout(width=constWidth),
         )
         self.ymax = FloatText(step=stepsize,
             description='Ymax',
+            disabled = disable_domain,
             layout=Layout(width=constWidth),
         )
         self.zmax = FloatText(step=stepsize,
             description='Zmax',
+            disabled = disable_domain,
             layout=Layout(width=constWidth),
         )
 #            description='$Time_{max}$',
@@ -62,16 +69,19 @@ class ConfigTab(object):
         self.xdelta = BoundedFloatText(
             min=1.,
             description='dx',   # '∆x',  # Mac: opt-j for delta
+            disabled = disable_domain,
             layout=Layout(width=constWidth),
         )
         self.ydelta = BoundedFloatText(
             min=1.,
             description='dy',
+            disabled = disable_domain,
             layout=Layout(width=constWidth),
         )
         self.zdelta = BoundedFloatText(
             min=1.,
             description='dz',
+            disabled = disable_domain,
             layout=Layout(width=constWidth),
         )
         """
@@ -107,6 +117,7 @@ class ConfigTab(object):
 
         self.omp_threads = BoundedIntText(
             min=1,
+            max=4,
             description='# threads',
             layout=Layout(width=constWidth),
         )
@@ -144,6 +155,28 @@ class ConfigTab(object):
             description='every',
             layout=Layout(width='160px'),
         )
+        self.mcds_interval = BoundedIntText(
+            min=1,
+            max=99999999,
+            description='every',
+#            disabled=True,
+            layout=Layout(width='160px'),
+        )
+
+        # don't let this be > mcds interval
+        def svg_interval_cb(b):
+            if (self.svg_interval.value > self.mcds_interval.value):
+                self.svg_interval.value = self.mcds_interval.value
+
+        self.svg_interval.observe(svg_interval_cb)  # BEWARE: when fill_gui, this sets value = 1 !
+
+        # don't let this be < svg interval
+        def mcds_interval_cb(b):
+            if (self.mcds_interval.value < self.svg_interval.value):
+                self.mcds_interval.value = self.svg_interval.value
+
+        self.mcds_interval.observe(mcds_interval_cb)   # BEWARE: see warning above
+
         def toggle_svg_cb(b):
             if (self.toggle_svg.value):
                 # self.svg_t0.disabled = False 
@@ -165,13 +198,6 @@ class ConfigTab(object):
         #     disabled=True,
         #     layout=Layout(width=constWidth),
         # )
-        self.mcds_interval = BoundedIntText(
-            min=0,
-            max=99999999,
-            description='every',
-#            disabled=True,
-            layout=Layout(width='160px'),
-        )
         def toggle_mcds_cb(b):
             if (self.toggle_mcds.value):
                 # self.mcds_t0.disabled = False #False
@@ -182,11 +208,12 @@ class ConfigTab(object):
             
         self.toggle_mcds.observe(toggle_mcds_cb)
        
-        #svg_output_row = HBox([toggle_svg, svg_t0, svg_interval])
-        #mat_output_row = HBox([toggle_mcds, mcds_t0, mcds_interval])
-#        svg_mat_output_row = HBox([self.toggle_svg, self.svg_interval, self.toggle_mcds, self.mcds_interval])
         svg_mat_output_row = HBox([Label('Plots:'),self.toggle_svg, HBox([self.svg_interval,Label('min')]), 
             self.toggle_mcds, HBox([self.mcds_interval,Label('min')])  ])
+
+        # to sync, do this
+        # svg_mat_output_row = HBox( [Label('Plots:'), self.svg_interval, Label('min')]) 
+
         #write_config_row = HBox([write_config_button, write_config_file])
         #run_sim_row = HBox([run_button, run_command_str, kill_button])
         # run_sim_row = HBox([run_button, run_command_str])
@@ -225,21 +252,23 @@ class ConfigTab(object):
         
         self.omp_threads.value = int(xml_root.find(".//omp_num_threads").text)
         
-        if xml_root.find(".//SVG//enable").text.lower() == 'true':
-            self.toggle_svg.value = True
-        else:
-            self.toggle_svg.value = False
-        self.svg_interval.value = int(xml_root.find(".//SVG//interval").text)
-
         if xml_root.find(".//full_data//enable").text.lower() == 'true':
             self.toggle_mcds.value = True
         else:
             self.toggle_mcds.value = False
         self.mcds_interval.value = int(xml_root.find(".//full_data//interval").text)
 
+        # NOTE: do this *after* filling the mcds_interval, directly above, due to the callback/constraints on them
+        if xml_root.find(".//SVG//enable").text.lower() == 'true':
+            self.toggle_svg.value = True
+        else:
+            self.toggle_svg.value = False
+        self.svg_interval.value = int(xml_root.find(".//SVG//interval").text)
+
 
     # Read values from the GUI widgets and generate/write a new XML
     def fill_xml(self, xml_root):
+        # print('config.py fill_xml() !!!!!')
         # TODO: verify template .xml file exists!
 
         # TODO: verify valid type (numeric) and range?
