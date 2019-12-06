@@ -219,7 +219,7 @@ class SubstrateTab(object):
         self.cell_edges_toggle = Checkbox(
             description='edges',
             disabled=False,
-            value=False,
+            value = self.show_edge,
 #           layout=Layout(width=constWidth2),
         )
         def cell_edges_toggle_cb(b):
