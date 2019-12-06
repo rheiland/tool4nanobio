@@ -418,6 +418,11 @@ class SubstrateTab(object):
             self.figsize_width_svg = 12.0 * ratio
             self.figsize_height_svg = 12.0 
 
+        self.svg_delta_t = config_tab.svg_interval.value
+        self.substrate_delta_t = config_tab.mcds_interval.value
+        self.modulo = int(self.substrate_delta_t / self.svg_delta_t)
+        # print("substrates: update_params(): modulo=",self.modulo)        
+
 #------------------------------------------------------------------------------
 #    def update(self, rdir):
 #   Called from pc4biorobots.py (among other places?)
