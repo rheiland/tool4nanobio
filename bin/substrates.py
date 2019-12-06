@@ -69,8 +69,8 @@ class SubstrateTab(object):
         # self.x_range = 2000.
         # self.y_range = 2000.
 
-        self.show_nucleus = 0
-        self.show_edge = False
+        self.show_nucleus = True
+        self.show_edge = True
 
         # initial value
         self.field_index = 4
@@ -216,6 +216,23 @@ class SubstrateTab(object):
         field_cmap_row3 = Box(children=items_auto, layout=box_layout)
 
         #---------------------
+        self.cell_nucleus_toggle = Checkbox(
+            description='nuclei',
+            disabled=False,
+            value = self.show_nucleus,
+#           layout=Layout(width=constWidth2),
+        )
+        def cell_nucleus_toggle_cb(b):
+            # self.update()
+            if (self.cell_nucleus_toggle.value):  
+                self.show_nucleus = True
+            else:
+                self.show_nucleus = False
+            self.i_plot.update()
+
+        self.cell_nucleus_toggle.observe(cell_nucleus_toggle_cb)
+
+        #----
         self.cell_edges_toggle = Checkbox(
             description='edges',
             disabled=False,
@@ -232,6 +249,7 @@ class SubstrateTab(object):
 
         self.cell_edges_toggle.observe(cell_edges_toggle_cb)
 
+        #----
         self.cells_toggle = Checkbox(
             description='Cells',
             disabled=False,
@@ -252,7 +270,7 @@ class SubstrateTab(object):
         self.substrates_toggle = Checkbox(
             description='Substrates',
             disabled=False,
-            value=True,
+            value=False,
 #           layout=Layout(width=constWidth2),
         )
         def substrates_toggle_cb(b):
@@ -299,7 +317,7 @@ class SubstrateTab(object):
                             align_items='stretch',
                             flex_direction='row',
                             display='flex')) 
-        row1b = Box( [self.cells_toggle, self.cell_edges_toggle], layout=Layout(border='1px solid black',
+        row1b = Box( [self.cells_toggle, self.cell_nucleus_toggle, self.cell_edges_toggle], layout=Layout(border='1px solid black',
                             width='50%',
                             height='',
                             align_items='stretch',
@@ -691,7 +709,7 @@ class SubstrateTab(object):
                 rgb_list.append(rgb)
 
                 # For .svg files with cells that *have* a nucleus, there will be a 2nd
-                if (self.show_nucleus == 0):
+                if (not self.show_nucleus):
                 #if (not self.show_nucleus):
                     break
 
