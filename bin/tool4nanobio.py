@@ -79,6 +79,20 @@ def read_config_cb(_b):
         # with debug_view:
         # print("read_config_cb():  calling fill_gui_params with ",config_file)
         fill_gui_params(config_file)  #should verify file exists!
+
+        # If cells or substrates toggled off in Config tab, toggle off in Plots tab
+        if config_tab.toggle_svg.value == False:
+            sub.cells_toggle.value = False
+            sub.cells_toggle.disabled = True
+        else:
+            sub.cells_toggle.disabled = False
+
+        if config_tab.toggle_mcds.value == False:
+            sub.substrates_toggle.value = False
+            sub.substrates_toggle.disabled = True
+        else:
+            sub.substrates_toggle.disabled = False
+
     else:
         # with debug_view:
         #     print("read_config_cb: ",config_file, " does not exist.")
@@ -88,7 +102,7 @@ def read_config_cb(_b):
     if is_dir:
         # svg.update(read_config.value)
         # print("read_config_cb():  is_dir True, calling update_params")
-        sub.update_params(config_tab)
+        sub.update_params(config_tab, user_tab)
         sub.update(read_config.value)
     # else:  # may want to distinguish "DEFAULT" from other saved .xml config files
         # FIXME: really need a call to clear the visualizations
@@ -113,7 +127,7 @@ def write_config_file(name):
     tree.write(name)
 
     # update substrate mesh layout (beware of https://docs.python.org/3/library/functions.html#round)
-    sub.update_params(config_tab)
+    sub.update_params(config_tab, user_tab)
     # sub.numx =  math.ceil( (config_tab.xmax.value - config_tab.xmin.value) / config_tab.xdelta.value )
     # sub.numy =  math.ceil( (config_tab.ymax.value - config_tab.ymin.value) / config_tab.ydelta.value )
     # print("tool4nanobio.py: ------- sub.numx, sub.numy = ", sub.numx, sub.numy)
@@ -230,6 +244,18 @@ def run_sim_func(s):
     # with debug_view:
     #     print('run_sim_func')
 
+    # If cells or substrates toggled off in Config tab, toggle off in Plots tab
+    if config_tab.toggle_svg.value == False:
+        sub.cells_toggle.value = False
+        sub.cells_toggle.disabled = True
+    else:
+        sub.cells_toggle.disabled = False
+    if config_tab.toggle_mcds.value == False:
+        sub.substrates_toggle.value = False
+        sub.substrates_toggle.disabled = True
+    else:
+        sub.substrates_toggle.disabled = False
+
     # make sure we are where we started
     os.chdir(homedir)
 
@@ -274,7 +300,8 @@ def run_sim_func(s):
 def outcb(s):
     # This is called when new output is received.
     # Only update file list for certain messages: 
-    if "simulat" in s:
+    # print("outcb(): s=",s)
+    if "simulat" in s:    # "current simulated time: 60 min (max: 14400 min)"
         # New Data. update visualizations
         # svg.update('')
         # sub.update('')
@@ -379,11 +406,7 @@ else:
 output_dir = "tmpdir"
 # svg.update(output_dir)
 
-# WARNING: invoking the following method may generate multiple "<Figure size...>" in stdout!
-# Its purpose is to auto-fill the dropdown widget containing substrate names, using data/initial.xml
-# If it leads to unwanted "<Figure size...>" being displayed in the app, you may need to
-# manually fill the dropdown widget entries and associated methods (in substrates.py).
-sub.update_dropdown_fields("data")   
+sub.update_dropdown_fields("data")   # WARNING: generates multiple "<Figure size...>" stdout!
 
 # print('config_tab.svg_interval.value= ',config_tab.svg_interval.value )
 # print('config_tab.mcds_interval.value= ',config_tab.mcds_interval.value )
